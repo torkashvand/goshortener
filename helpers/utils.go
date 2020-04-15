@@ -10,6 +10,11 @@ import (
 func ConvertBase(num uint) string {
 	cfg := config.Config()
 	shortenerBase := cfg.GetString("SHORTENER_BASE")
+
+	if num == 0 {
+		return string(shortenerBase[0])
+	}
+
 	var shortenedSlice []string
 	base := uint(len(shortenerBase))
 
@@ -18,11 +23,11 @@ func ConvertBase(num uint) string {
 		num = num / base
 
 		shortenedSlice = append(shortenedSlice, string(shortenerBase[mod]))
+	}
 
-		for i, j := 0, len(shortenedSlice)-1; i < j; i, j = i+1, j-1 {
-			shortenedSlice[i], shortenedSlice[j] = shortenedSlice[j], shortenedSlice[i]
-		}
-
+	// Reverse shortenedSlice array
+	for i, j := 0, len(shortenedSlice)-1; i < j; i, j = i+1, j-1 {
+		shortenedSlice[i], shortenedSlice[j] = shortenedSlice[j], shortenedSlice[i]
 	}
 
 	shortenedString := strings.Join(shortenedSlice, "")

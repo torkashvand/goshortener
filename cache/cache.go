@@ -2,11 +2,11 @@ package cache
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"github.com/torkashvand/goshortener/config"
 
 	"github.com/go-redis/redis"
+	"github.com/torkashvand/goshortener/log"
 )
 
 var redisClient *redis.Client
@@ -14,6 +14,7 @@ var redisClient *redis.Client
 // InitializeRedis connect to redis
 func InitializeRedis() {
 	config := config.Config()
+
 	redisClient = redis.NewClient(&redis.Options{
 		Addr:       config.GetString("REDIS_ADDRESS"),
 		PoolSize:   config.GetInt("REDIS_POOL_SIZE"),
@@ -23,9 +24,9 @@ func InitializeRedis() {
 	})
 
 	if ping, err := redisClient.Ping().Result(); err == nil && len(ping) > 0 {
-		println("Connected to Redis")
+		log.Info("Connected to Redis")
 	} else {
-		println("Redis Connection Failed")
+		log.Errorln("Redis Connection Failed")
 	}
 }
 
@@ -34,7 +35,9 @@ func GetValue(key string) (interface{}, error) {
 	var deserializedValue interface{}
 	serializedValue, err := redisClient.Get(key).Result()
 	json.Unmarshal([]byte(serializedValue), &deserializedValue)
-	fmt.Println(err)
+
+	log.Errorln(err)
+
 	return deserializedValue, err
 }
 
@@ -42,5 +45,8 @@ func GetValue(key string) (interface{}, error) {
 func SetValue(key string, value interface{}) (bool, error) {
 	serializedValue, _ := json.Marshal(value)
 	err := redisClient.Set(key, string(serializedValue), 0).Err()
+
+	log.Errorln(err)
+
 	return true, err
 }
