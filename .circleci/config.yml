@@ -19,28 +19,9 @@ jobs:
           name: "Fetch dependencies"
           command: >
             go mod download
-      # Only run gofmt, vet & lint against the latest Go version
+      # Only run tests against the latest Go version
       - run:
-          name: "Run golint"
-          command: >
-            if [ "${LATEST}" = true ] && [ -z "${SKIP_GOLINT}" ]; then
-              go get -u golang.org/x/lint/golint
-              golint ./...
-            fi
-      - run:
-          name: "Run gofmt"
-          command: >
-            if [[ "${LATEST}" = true ]]; then
-              diff -u <(echo -n) <(gofmt -d -e .)
-            fi
-      - run:
-          name: "Run go vet"
-          command: >
-            if [[ "${LATEST}" = true ]]; then
-              go vet -v ./...
-            fi
-      - run:
-          name: "Run golint"
+          name: "Run tests"
           command: >
             if [ "${LATEST}" = true ]; then
               make test
@@ -60,7 +41,7 @@ jobs:
     # that object, and not copy+paste the entire object (at risk of typo, or misconfig)
     <<: *test
     docker:
-      - image: circleci/golang:1.12
+      - image: circleci/golang:1.14
 
 workflows:
   version: 2
@@ -70,4 +51,4 @@ workflows:
       # add a "requires: latest" to the specific version tags, if we wanted to
       # attempt to build latest first (only).
       - "latest"
-      - "1.12"
+      - "1.14"
