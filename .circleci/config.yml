@@ -23,22 +23,22 @@ jobs:
       - run:
           name: "Run tests"
           command: >
-            if [ "${LATEST}" = true ]; then
+            if [ "${LATEST}" = "true" ]; then
               make test
             fi
       # build the application docker images
       - setup_remote_docker
       - run:
-            name: "Build & Push Docker Images"
-            command: |
-                  echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-                  make package
-                  make tag
-                  make push
+          name: "Build & Push Docker Images"
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            make package
+            make tag
+            make push
   "latest":
     <<: *test
     environment:
-      LATEST: true
+      LATEST: "true"
       # Since we re-define the "environment" here, we need to add "GO111MODULE=on" back
       GO111MODULE: "on"
       GOSHORTENER_DB_DRIVER: sqlite3
