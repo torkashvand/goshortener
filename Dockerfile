@@ -1,5 +1,5 @@
 # Build Stage
-FROM lacion/alpine-golang-buildimage:1.13 AS build-stage
+FROM lacion/alpine-golang-buildimage:1.14 AS build-stage
 
 LABEL app="build-goshortener"
 LABEL REPO="https://github.com/torkashvand/goshortener"
