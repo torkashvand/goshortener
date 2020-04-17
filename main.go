@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/torkashvand/goshortener/cmd"
-	"github.com/torkashvand/goshortener/routers"
 	"github.com/torkashvand/goshortener/models"
+	"github.com/torkashvand/goshortener/routers"
 )
 
 func main() {
