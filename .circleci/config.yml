@@ -39,8 +39,8 @@ jobs:
             if [[ "${LATEST}" = true ]]; then
               go vet -v ./...
             fi
-     - run:
-          name: "Run Tests"
+      - run:
+          name: "Run golint"
           command: >
             if [ "${LATEST}" = true ]; then
               make test
@@ -53,7 +53,6 @@ jobs:
       GO111MODULE: "on"
       GOSHORTENER_DB_DRIVER: sqlite3
       GOSHORTENER_BASE_REDIRECT_SERVER: http://127.0.0.1:8080/redirect/
-      GOSHORTENER_SHORTENER_BASE: 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
 
   "1.12":
     # This is the neat trick: the <<: *test references the, well, &test reference
