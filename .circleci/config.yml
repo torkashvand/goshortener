@@ -26,6 +26,14 @@ jobs:
             if [ "${LATEST}" = true ]; then
               make test
             fi
+      # build the application image
+      - run:
+            name: "Build & Push Docker Images"
+            command: >
+                  echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+                  make package
+                  make tag
+                  make push
   "latest":
     <<: *test
     environment:
