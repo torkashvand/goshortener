@@ -51,9 +51,9 @@ jobs:
       LATEST: true
       # Since we re-define the "environment" here, we need to add "GO111MODULE=on" back
       GO111MODULE: "on"
-      GOSHORTENER_DB_DRIVER=sqlite3
-      GOSHORTENER_BASE_REDIRECT_SERVER=http://127.0.0.1:8080/redirect/
-      GOSHORTENER_SHORTENER_BASE=0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+      GOSHORTENER_DB_DRIVER: sqlite3
+      GOSHORTENER_BASE_REDIRECT_SERVER: http://127.0.0.1:8080/redirect/
+      GOSHORTENER_SHORTENER_BASE: 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
 
   "1.12":
     # This is the neat trick: the <<: *test references the, well, &test reference
