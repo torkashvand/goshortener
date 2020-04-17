@@ -26,7 +26,9 @@ jobs:
             if [ "${LATEST}" = true ]; then
               make test
             fi
-      # build the application image
+      # build the application docker images
+      - setup_remote_docker:
+            docker_layer_caching: true
       - run:
             name: "Build & Push Docker Images"
             command: |
