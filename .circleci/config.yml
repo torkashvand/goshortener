@@ -1,25 +1,98 @@
-# Golang CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-go/ for more details
-version: 2
+version: 2.0
+
 jobs:
-  build:
+  # Base test configuration for Go library tests Each distinct version should
+  # inherit this base, and override (at least) the container image used.
+  "test": &test
     docker:
-      # specify the version
+      - image: circleci/golang:latest
+    working_directory: /go/src/github.com/torkashvand/goshortener
+    environment:
+      GO111MODULE: "on"
+    steps: &steps
+      # Our build steps: we checkout the repo, fetch our deps, lint, and finally
+      # run "go test" on the package.
+      - checkout
+      # Logs the version in our build logs, for posterity
+      - run: go version
+      - run:
+          name: "Fetch dependencies"
+          command: >
+            go mod download
+      # Only run gofmt, vet & lint against the latest Go version
+      - run:
+          name: "Run golint"
+          command: >
+            if [ "${LATEST}" = true ] && [ -z "${SKIP_GOLINT}" ]; then
+              go get -u golang.org/x/lint/golint
+              golint ./...
+            fi
+      - run:
+          name: "Run gofmt"
+          command: >
+            if [[ "${LATEST}" = true ]]; then
+              diff -u <(echo -n) <(gofmt -d -e .)
+            fi
+      - run:
+          name: "Run go vet"
+          command:  >
+            if [[ "${LATEST}" = true ]]; then
+              go vet -v ./...
+            fi
+      - run: go test -v -race ./...
+
+  "latest":
+    <<: *test
+    environment:
+      LATEST: true
+      GO111MODULE: "on"
+
+  "1.12":
+    # This is the neat trick: the <<: *test references the, well, &test reference
+    # we created above. If we want to override any sub-object, we just need to supply
+    # that object, and not copy+paste the entire object (at risk of typo, or misconfig)
+    <<: *test
+    docker:
+      - image: circleci/golang:1.12
+
+  "1.11":
+    <<: *test
+    docker:
+      # Version tags here fetch the latest Go patch release by default
+      # e.g. "golang:1.11" fetches 1.11.11 automatically.
+      - image: circleci/golang:1.11
+
+  "1.10":
+    <<: *test
+    docker:
+      - image: circleci/golang:1.10
+
+  "1.9":
+    <<: *test
+    docker:
       - image: circleci/golang:1.9
 
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/postgres:9.4
+  "1.8":
+    <<: *test
+    docker:
+      - image: circleci/golang:1.8
 
-    #### TEMPLATE_NOTE: go expects specific checkout path representing url
-    #### expecting it in the form of
-    ####   /go/src/github.com/circleci/go-tool
-    ####   /go/src/bitbucket.org/circleci/go-tool
-    working_directory: /go/src/github.com/torkashvand/goshortenner
-    steps:
-      - checkout
+  "1.7":
+    <<: *test
+    docker:
+      - image: circleci/golang:1.7
 
-      # specify any bash command here prefixed with `run: `
-      - run: make test 
+workflows:
+  version: 2
+  build:
+    jobs:
+      # Self-explanatory: we run all of our builds. We could potentially
+      # add a "requires: latest" to the specific version tags, if we wanted to
+      # attempt to build latest first (only).
+      - "latest"
+      - "1.12"
+      - "1.11"
+      - "1.10"
+      - "1.9"
+      - "1.8"
+      - "1.7"
