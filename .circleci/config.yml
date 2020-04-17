@@ -29,7 +29,7 @@ jobs:
       # build the application image
       - run:
             name: "Build & Push Docker Images"
-            command: >
+            command: |
                   echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
                   make package
                   make tag
