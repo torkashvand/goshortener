@@ -35,7 +35,7 @@ jobs:
       GOSHORTENER_DB_DRIVER: sqlite3
       GOSHORTENER_BASE_REDIRECT_SERVER: http://127.0.0.1:8080/redirect/
 
-  "1.12":
+  "1.14":
     # This is the neat trick: the <<: *test references the, well, &test reference
     # we created above. If we want to override any sub-object, we just need to supply
     # that object, and not copy+paste the entire object (at risk of typo, or misconfig)
