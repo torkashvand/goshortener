@@ -69,7 +69,7 @@ func (mysql *MysqlDB) Open() {
 	mysql.SetDB(db)
 }
 
-// SQLite reperesent concrete struct for Mysql database
+// SQLite reperesent concrete struct for SQLite database
 type SQLite struct {
 	Database
 }

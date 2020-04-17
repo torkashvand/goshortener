@@ -21,7 +21,7 @@ func TestCreateLink(t *testing.T) {
 	// Assert we encoded correctly,
 	// the request gives a 201, w.Code
 	if w.Code != http.StatusCreated {
-		t.Errorf("TestConvertBase FAILED, expected value %v but got %v", http.StatusCreated, w.Code)
+		t.Errorf("TestCreateLink FAILED, expected value %v but got %v", http.StatusCreated, w.Code)
 	}
 }
 
@@ -41,7 +41,7 @@ func TestGetLinks(t *testing.T) {
 	// Assert we encoded correctly,
 	// the request gives a 200, w.Code)
 	if w.Code != http.StatusOK {
-		t.Errorf("TestConvertBase FAILED, expected value %v but got %v", http.StatusOK, w.Code)
+		t.Errorf("TestGetLinks FAILED, expected value %v but got %v", http.StatusOK, w.Code)
 	}
 
 	// Convert the JSON response to a map
@@ -51,18 +51,18 @@ func TestGetLinks(t *testing.T) {
 	// Grab the value & whether or not it exists
 	// Make some assertions on the correctness of the response.
 	if err != nil {
-		t.Errorf("TestConvertBase FAILED, expected value %v but got %v", nil, err)
+		t.Errorf("TestGetLinks FAILED, expected value %v but got %v", nil, err)
 	}
 
 	count := len(response["data"])
 	if count != 1 {
-		t.Errorf("TestConvertBase FAILED, expected value %v but got %v", 1, count)
+		t.Errorf("TestGetLinks FAILED, expected value %v but got %v", 1, count)
 
 	}
 
 	returnedAddress := response["data"][0].Address
 	if returnedAddress != randomAddress {
-		t.Errorf("TestConvertBase FAILED, expected value %v but got %v", randomAddress, returnedAddress)
+		t.Errorf("TestGetLinks FAILED, expected value %v but got %v", randomAddress, returnedAddress)
 	}
 }
 
@@ -85,6 +85,6 @@ func TestRedirect(t *testing.T) {
 	// Assert we encoded correctly,
 	// the request gives a 200, w.Code)
 	if res.Code != http.StatusMovedPermanently {
-		t.Errorf("TestConvertBase FAILED, expected value %v but got %v", http.StatusMovedPermanently, res.Code)
+		t.Errorf("TestRedirect FAILED, expected value %v but got %v", http.StatusMovedPermanently, res.Code)
 	}
 }
